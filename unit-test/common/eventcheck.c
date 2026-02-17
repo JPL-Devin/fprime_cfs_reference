@@ -17,7 +17,7 @@
  ************************************************************************/
 
 /*
-** File: coveragetest_sample_app.c
+** File: coveragetest_fprime_reference_app.c
 **
 ** Purpose:
 ** Coverage Unit Test cases for the SAMPLE Application

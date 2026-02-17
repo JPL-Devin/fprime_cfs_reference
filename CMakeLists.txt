@@ -1,31 +1,31 @@
-project(CFE_SAMPLE_APP C)
+project(CFE_FPRIME_REFERENCE_APP C)
 
 set(APP_SRC_FILES
-  fsw/src/sample_app.c
-  fsw/src/sample_app_cmds.c
-  fsw/src/sample_app_utils.c
+  fsw/src/fprime_reference_app.c
+  fsw/src/fprime_reference_app_cmds.c
+  fsw/src/fprime_reference_app_utils.c
 )
 
 if (CFE_EDS_ENABLED)
   list(APPEND APP_SRC_FILES
-    fsw/src/sample_app_eds_dispatch.c
+    fsw/src/fprime_reference_app_eds_dispatch.c
   )
 else()
   list(APPEND APP_SRC_FILES
-    fsw/src/sample_app_dispatch.c
+    fsw/src/fprime_reference_app_dispatch.c
   )
 endif()
 
 # Create the app module
-add_cfe_app(sample_app ${APP_SRC_FILES})
+add_cfe_app(fprime_reference_app ${APP_SRC_FILES})
 
-target_include_directories(sample_app PUBLIC fsw/inc)
+target_include_directories(fprime_reference_app PUBLIC fsw/inc)
 # Include the public API from sample_lib to demonstrate how
 # to call library-provided functions
-add_cfe_app_dependency(sample_app sample_lib)
+add_cfe_app_dependency(fprime_reference_app sample_lib)
 
 # Add table
-add_cfe_tables(sample_app fsw/tables/sample_app_tbl.c)
+add_cfe_tables(fprime_reference_app fsw/tables/fprime_reference_app_tbl.c)
 
 # If UT is enabled, then add the tests from the subdirectory
 # Note that this is an app, and therefore does not provide
