@@ -88,7 +88,7 @@ void FPRIME_APP_Main(void)
         else
         {
             CFE_EVS_SendEvent(FPRIME_APP_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "SAMPLE APP: SB Pipe Read Error, App Will Exit");
+                              "FPRIME APP: SB Pipe Read Error, App Will Exit");
 
             FPRIME_APP_Data.RunStatus = CFE_ES_RunStatus_APP_ERROR;
         }
@@ -123,7 +123,7 @@ CFE_Status_t FPRIME_APP_Init(void)
     status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
     if (status != CFE_SUCCESS)
     {
-        CFE_ES_WriteToSysLog("Sample App: Error Registering Events, RC = 0x%08lX\n", (unsigned long)status);
+        CFE_ES_WriteToSysLog("F Prime App: Error Registering Events, RC = 0x%08lX\n", (unsigned long)status);
     }
     else
     {
@@ -141,7 +141,7 @@ CFE_Status_t FPRIME_APP_Init(void)
         if (status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(FPRIME_APP_CR_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Sample App: Error creating SB Command Pipe, RC = 0x%08lX", (unsigned long)status);
+                              "F Prime App: Error creating SB Command Pipe, RC = 0x%08lX", (unsigned long)status);
         }
     }
 
@@ -154,7 +154,7 @@ CFE_Status_t FPRIME_APP_Init(void)
         if (status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(FPRIME_APP_SUB_HK_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Sample App: Error Subscribing to HK request, RC = 0x%08lX", (unsigned long)status);
+                              "F Prime App: Error Subscribing to HK request, RC = 0x%08lX", (unsigned long)status);
         }
     }
 
@@ -167,7 +167,7 @@ CFE_Status_t FPRIME_APP_Init(void)
         if (status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(FPRIME_APP_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Sample App: Error Subscribing to Commands, RC = 0x%08lX", (unsigned long)status);
+                              "F Prime App: Error Subscribing to Commands, RC = 0x%08lX", (unsigned long)status);
         }
     }
 
@@ -181,17 +181,17 @@ CFE_Status_t FPRIME_APP_Init(void)
         if (status != CFE_SUCCESS)
         {
             CFE_EVS_SendEvent(FPRIME_APP_TABLE_REG_ERR_EID, CFE_EVS_EventType_ERROR,
-                              "Sample App: Error Registering Example Table, RC = 0x%08lX", (unsigned long)status);
+                              "F Prime App: Error Registering Example Table, RC = 0x%08lX", (unsigned long)status);
         }
         else
         {
             status = CFE_TBL_Load(FPRIME_APP_Data.TblHandles[0], CFE_TBL_SRC_FILE, FPRIME_APP_PLATFORM_TABLE_FILE);
         }
 
-        CFE_Config_GetVersionString(VersionString, FPRIME_APP_CFG_MAX_VERSION_STR_LEN, "Sample App", FPRIME_APP_VERSION,
+        CFE_Config_GetVersionString(VersionString, FPRIME_APP_CFG_MAX_VERSION_STR_LEN, "F Prime App", FPRIME_APP_VERSION,
                                     FPRIME_APP_BUILD_CODENAME, FPRIME_APP_LAST_OFFICIAL);
 
-        CFE_EVS_SendEvent(FPRIME_APP_INIT_INF_EID, CFE_EVS_EventType_INFORMATION, "Sample App Initialized.%s",
+        CFE_EVS_SendEvent(FPRIME_APP_INIT_INF_EID, CFE_EVS_EventType_INFORMATION, "F Prime App Initialized.%s",
                           VersionString);
     }
 

@@ -1,4 +1,10 @@
-project(CFE_FPRIME_APP C)
+cmake_minimum_required(VERSION 3.22)
+project(CFE_FPRIME_APP C CXX)
+
+add_compile_options(-fPIC)
+set(FPRIME_INCLUDE_FRAMEWORK_CODE ON)
+find_package(FPrime REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/lib/fprime")
+
 
 set(APP_SRC_FILES
   fsw/src/fprime_app.c
@@ -16,13 +22,6 @@ else()
   )
 endif()
 
-# Create the app module
-add_cfe_app(fprime_app ${APP_SRC_FILES})
-
-target_include_directories(fprime_app PUBLIC fsw/inc)
-# Include the public API from sample_lib to demonstrate how
-# to call library-provided functions
-add_cfe_app_dependency(fprime_app sample_lib)
 
 # Add table
 add_cfe_tables(fprime_app fsw/tables/fprime_app_tbl.c)
