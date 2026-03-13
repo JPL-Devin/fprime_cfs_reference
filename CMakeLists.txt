@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.22)
+
 project(CFE_FPRIME_APP C CXX)
-
+set(FPRIME_PROJECT_ROOT "${PROJECT_SOURCE_DIR}")
+list(PREPEND FPRIME_BUILD_LOCATIONS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 add_compile_options(-fPIC)
-set(FPRIME_INCLUDE_FRAMEWORK_CODE ON)
-find_package(FPrime REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/lib/fprime")
-
+fprime_setup_global_includes()
+include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
 
 set(APP_SRC_FILES
   fsw/src/fprime_app.c
@@ -21,7 +22,7 @@ else()
     fsw/src/fprime_app_dispatch.c
   )
 endif()
-
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FPrimeDeployment")
 
 # Add table
 add_cfe_tables(fprime_app fsw/tables/fprime_app_tbl.c)
