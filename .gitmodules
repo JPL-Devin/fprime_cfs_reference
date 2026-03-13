@@ -42,3 +42,12 @@
 	path = tools/tblCRCTool
 	url = https://github.com/nasa/tblCRCTool.git
   branch = main
+[submodule "fprime"]
+	path = libs/fprime
+	url = https://github.com/nasa/fprime.git
+[submodule "fprime_app"]
+	path = apps/fprime_app
+	url = https://github.jpl.nasa.gov/mstarch/fprime_app.git
+[submodule "fprime_gds"]
+	path = apps/fprime_gds
+	url = https://github.jpl.nasa.gov/mstarch/fprime_gds.git
