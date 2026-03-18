@@ -50,6 +50,13 @@ typedef struct
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
 } FPRIME_APP_NoopCmd_t;
 
+typedef struct 
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+    
+};
+
+
 typedef struct
 {
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
