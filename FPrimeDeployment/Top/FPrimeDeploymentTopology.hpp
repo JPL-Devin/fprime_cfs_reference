@@ -8,6 +8,7 @@
 // Included for access to FPrimeDeployment::TopologyState and FPrimeDeployment::ConfigObjects::pingEntries. These definitions are required by the
 // autocoder, but are also used in this hand-coded topology.
 #include <FPrimeDeployment/Top/FPrimeDeploymentTopologyDefs.hpp>
+#include <Fw/Time/TimeInterval.hpp>
 
 namespace FPrimeApp {
 /**

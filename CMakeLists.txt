@@ -23,6 +23,7 @@ else()
     fsw/src/fprime_app_dispatch.c
   )
 endif()
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/fprime_config/config")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FPrimeCfs")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FPrimeDeployment")
 

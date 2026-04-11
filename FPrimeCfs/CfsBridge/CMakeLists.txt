@@ -9,11 +9,12 @@
 # https://fprime.jpl.nasa.gov/latest/docs/reference/api/cmake/API/
 #
 ####
+#add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Types/")
 
 # Module names are derived from the path from the nearest project/library/framework
 # root when not specifically overridden by the developer, i.e. the module defined by
 # `MyProj/Some/Path/CMakeLists.txt` will be named `MyProj_Some_Path`.
-
+include_directories("${CMAKE_CURRENT_LIST_DIR}/../../fsw/inc")
 register_fprime_library(
     AUTOCODER_INPUTS
         "${CMAKE_CURRENT_LIST_DIR}/CfsBridge.fpp"

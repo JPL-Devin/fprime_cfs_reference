@@ -45,17 +45,18 @@
 ** allows them to change independently in the future without changing the prototype
 ** of the handler function
 */
+#define FPRIME_RAW_COMMAND_MAX_SIZE 1
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CommandHeader;
+    uint8 data[FPRIME_RAW_COMMAND_MAX_SIZE]; // Placeholder for variable-length data, actual size determined by message length in CFS
+} FPRIME_RawCommandMessage_t;
+
+
 typedef struct
 {
     CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
 } FPRIME_APP_NoopCmd_t;
-
-typedef struct 
-{
-    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
-    
-};
-
 
 typedef struct
 {

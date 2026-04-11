@@ -44,11 +44,6 @@ void configureTopology() {
 
     // Rate groups require context arrays.
     rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
-    rateGroup2.configure(rateGroup2Context, FW_NUM_ARRAY_ELEMENTS(rateGroup2Context));
-    rateGroup3.configure(rateGroup3Context, FW_NUM_ARRAY_ELEMENTS(rateGroup3Context));
-
-    // Command sequencer needs to allocate memory to hold contents of command sequences
-    cmdSeq.allocateBuffer(0, mallocator, 5 * 1024);
 }
 
 void setupTopology(const TopologyState& state) {
@@ -62,21 +57,12 @@ void setupTopology(const TopologyState& state) {
     regCommands();
     // Autocoded configuration. Function provided by autocoder.
     configComponents(state);
-    if (state.hostname != nullptr && state.port != 0) {
-        comDriver.configure(state.hostname, state.port);
-    }
     // Project-specific component configuration. Function provided above. May be inlined, if desired.
     configureTopology();
     // Autocoded parameter loading. Function provided by autocoder.
     loadParameters();
     // Autocoded task kick-off (active components). Function provided by autocoder.
     startTasks(state);
-    // Initialize socket communication if and only if there is a valid specification
-    if (state.hostname != nullptr && state.port != 0) {
-        Os::TaskString name("ReceiveTask");
-        // Uplink is configured for receive so a socket task is started
-        comDriver.start(name, COMM_PRIORITY, Default::STACK_SIZE);
-    }
 }
 
 void startRateGroups(const Fw::TimeInterval& interval) {
@@ -95,13 +81,6 @@ void teardownTopology(const TopologyState& state) {
     // Autocoded (active component) task clean-up. Functions provided by topology autocoder.
     stopTasks(state);
     freeThreads(state);
-
-    // Other task clean-up.
-    comDriver.stop();
-    (void)comDriver.join();
-
-    // Resource deallocation
-    cmdSeq.deallocateBuffer(mallocator);
 
     tearDownComponents(state);
 }
