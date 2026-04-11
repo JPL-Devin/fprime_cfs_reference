@@ -1,0 +1,4 @@
+#!/bin/bash
+rm -r build
+make SIMULATION=native prep
+./do

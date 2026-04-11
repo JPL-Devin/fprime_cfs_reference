@@ -1,0 +1,3 @@
+#!/bin/bash
+fprime-gds --ip-port 15010 --dictionary ~/RefTopologyDictionary.json  -n --ip-client --zmq-transport ipc:///tmp/fprime-server-in-ms ipc:///tmp/fprime-server-out-ms
+
