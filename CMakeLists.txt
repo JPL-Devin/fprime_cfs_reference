@@ -6,7 +6,7 @@ list(APPEND FPRIME_BUILD_LOCATIONS "${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR
 add_compile_options(-fPIC)
 list(APPEND CMAKE_MODULE_PATH "${FPRIME_FRAMEWORK_PATH}/cmake")
 fprime_setup_global_includes()
-include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}")
+include_directories("${PROJECT_SOURCE_DIR}" "${PROJECT_BINARY_DIR}" ${FPRIME_INCLUDE_ROOTS})
 
 set(APP_SRC_FILES
   fsw/src/fprime_app.c
@@ -24,7 +24,6 @@ else()
   )
 endif()
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/fprime_config/config")
-add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FPrimeCfs")
 add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FPrimeDeployment")
 
 # Add table
