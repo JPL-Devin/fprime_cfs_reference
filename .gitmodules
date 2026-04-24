@@ -51,3 +51,6 @@
 [submodule "fprime_gds"]
 	path = apps/fprime_gds
 	url = https://github.jpl.nasa.gov/mstarch/fprime_gds.git
+[submodule "libs/fprime_cfs"]
+	path = libs/fprime_cfs
+	url = https://github.jpl.nasa.gov/mstarch/fprime_cfs.git
