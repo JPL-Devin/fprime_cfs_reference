@@ -8,6 +8,7 @@
 #include "FPrimeCfs/CfsBridge/cfs_bridge_msgstruct.h"
 #include "Fw/Logger/Logger.hpp"
 #include "config/TransmissionTypeEnumAc.hpp"
+#include <cstring>
 #include <limits>
 
 extern "C" {
@@ -80,7 +81,7 @@ CFE_SB_MsgId_t CfsBridge ::getCfsMessageId(const ComCfg::Apid::T apid) {
             break;
         // Everything else is "telemetry"
         default:
-            message_id = CFE_PLATFORM_CMD_TOPICID_TO_MIDV(apid);
+            message_id = CFE_PLATFORM_TLM_TOPICID_TO_MIDV(apid);
             break;
     }
     // Then conver the message ID value to a CFE_SB_MsgId_t
@@ -97,6 +98,8 @@ void CfsBridge ::poll() {
     if (status == CFE_SUCCESS) {
         Fw::Logger::log("[DEBUG] Received message!\n");
         CFE_MSG_Message_t* received_message = &buffer->Msg;
+
+
         U8* payload = static_cast<U8*>(CFE_SB_GetUserData(received_message));
         FwSizeType payload_length = CFE_SB_GetUserDataLength(received_message);
 
@@ -154,14 +157,12 @@ void CfsBridge ::dataIn_handler(FwIndexType portNum, Fw::Buffer &data, const Com
 
     // First, check for overflows before attempting to creat a cFS message that is too-large
     if (std::numeric_limits<CFE_MSG_Size_t>::max() - header_size < data.getSize()) {
-        Fw::Logger::log("[ERROR] Message will overflow cFS message limit: %" PRI_FwSizeType " to large\n", data.getSize());
         this->dataReturnOut_out(0, data, context);
         if (this->isConnected_comStatusOut_OutputPort(0)) {
             this->comStatusOut_out(0, comStatus);
         }
         return;
     }
-    // Calculate the items needed for a cFS message
     CFE_MSG_Size_t message_size = header_size + data.getSize();
     CFE_SB_MsgId_t message_id = this->getCfsMessageId(apid);
 
@@ -169,7 +170,6 @@ void CfsBridge ::dataIn_handler(FwIndexType portNum, Fw::Buffer &data, const Com
     CFE_Status_t status = CFE_MSG_Init(message_pointer,  message_id, message_size);
     if (status != CFE_SUCCESS)
     {
-        Fw::Logger::log("[ERROR] Failed to initialize CFS message: 0x%08x\n", status);
         this->dataReturnOut_out(0, data, context);
         if (this->isConnected_comStatusOut_OutputPort(0)) {
             this->comStatusOut_out(0, comStatus);
@@ -182,7 +182,6 @@ void CfsBridge ::dataIn_handler(FwIndexType portNum, Fw::Buffer &data, const Com
     status = CFE_SB_TransmitMsg(reinterpret_cast<CFE_MSG_Message_t*>(&message), this->m_source);
     if (status != CFE_SUCCESS)
     {
-        Fw::Logger::log("[ERROR] Failed to transmit CFS message: 0x%08x\n", status);
         this->dataReturnOut_out(0, data, context);
         if (this->isConnected_comStatusOut_OutputPort(0)) {
             this->comStatusOut_out(0, comStatus);
@@ -203,7 +202,6 @@ void CfsBridge ::dataReturnIn_handler(FwIndexType portNum, Fw::Buffer &data, con
 
 void CfsBridge ::comStatusIn_handler(FwIndexType portNum, Fw::Success &status)
 {
-    Fw::Logger::log("UNPAUSED\n");
     this->m_paused = (status == Fw::Success::SUCCESS) ? false : true;
 }
 

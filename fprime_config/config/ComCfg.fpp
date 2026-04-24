@@ -52,6 +52,7 @@ module ComCfg {
         vcId: U8           @< REQUIRED to appease F Prime's build
         sendNow: bool               @< Flag to AOS Framer that the Frame this packet goes into should be sent ASAP
     } default {
+        vcId = 1
         comQueueIndex = 0
         apid = Apid.FW_PACKET_UNKNOWN
         transmissionType = TransmissionType.TELEMETRY

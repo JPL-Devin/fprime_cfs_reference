@@ -78,7 +78,7 @@ module FPrimeApp {
 
   instance rateGroupDriver: Svc.RateGroupDriver base id 0x10011000
 
-  instance timer: Svc.LinuxTimer base id 0x10012000
+  instance timer: Svc.PollingTimer base id 0x10012000
 
   instance fprimeRouter: Svc.FprimeRouter base id 0x10013000
 

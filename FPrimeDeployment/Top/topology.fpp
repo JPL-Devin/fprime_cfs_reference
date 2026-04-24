@@ -66,8 +66,9 @@ module FPrimeApp {
 
       # Rate group 1
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1.CycleIn
-      rateGroup1.RateGroupMemberOut[0] -> CdhCore.tlmSend.Run
-      rateGroup1.RateGroupMemberOut[1] -> CdhCore.$health.Run
+      rateGroup1.RateGroupMemberOut[0] -> CdhCore.cmdDisp.run
+      rateGroup1.RateGroupMemberOut[1] -> CdhCore.tlmSend.Run
+      rateGroup1.RateGroupMemberOut[2] -> CdhCore.$health.Run
     }
 
     connections CfsBridge {
