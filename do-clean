@@ -3,9 +3,20 @@
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 VENV_DIR="$SCRIPT_DIR/fprime-venv"
 
-if [[ -d "$VENV_DIR" && "${VIRTUAL_ENV:-}" != "$VENV_DIR" ]]; then
-	# shellcheck disable=SC1091
-	source "$VENV_DIR/bin/activate"
+if [[ -d "$VENV_DIR" && "${VIRTUAL_ENV:-}" != "$VENV_DIR" ]]
+then
+    # shellcheck disable=SC1091
+    source "$VENV_DIR/bin/activate"
+elif [[ "${VIRTUAL_ENV:-}" == "" ]]
+then
+    echo "[ERROR] No virtual environment sourced nor available"
+    exit 1
+fi
+
+# Copy in the makefile when non-existant
+if [ ! -f ./Makefile ]
+then
+    cp cfe/cmake/Makefile.sample Makefile
 fi
 
 rm -r build
