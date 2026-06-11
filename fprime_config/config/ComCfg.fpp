@@ -2,6 +2,9 @@
 # FPP file for configuration of the communications stack
 # ======================================================================
 
+@ The width of packet descriptors when they are serialized by the framework
+dictionary type FwPacketDescriptorType = U16
+
 module ComCfg {
 
     @ Spacecraft ID (10 bits) for CCSDS Data Link layer
@@ -15,6 +18,13 @@ module ComCfg {
 
     @ Aggregation buffer for ComAggregator component
     constant AggregationSize = TmFrameFixedSize - 6 - 6 - 1 - 2  # 2 header (6) + 1 idle byte + 2 trailer bytes
+
+    @ Packet Version Numbers are 3 bits with only 2 currently valid values
+    dictionary enum Pvn : U8 {
+        SPACE_PACKET_PROTOCOL         = 0x0   @< Fully Featured CCSDS Space Packet Protocol
+        ENCAPSULATION_PACKET_PROTOCOL = 0x7   @< Bare-bones CCSDS Encapsulation Packet Protocol
+        INVALID_UNINITIALIZED         = 0x8   @< Anything equal or higher value is invalid and should not be used
+    } default INVALID_UNINITIALIZED
 
     @ Transmission type for the CfsBridge component
     enum TransmissionType : U8 {
@@ -39,23 +49,26 @@ module ComCfg {
         INVALID_UNINITIALIZED    = 0x0800  @< Anything equal or higher value is invalid and should not be used
     } default INVALID_UNINITIALIZED
 
-    @ Context required for the CfsBridge component. This is a delta on the existing configuration from the default
-    @ ComCfg. It adds in the fields necessary to influence the CfsBridge behavior when framing and deframing messages.
-    @
-
+    @ Type used to pass context info between components during framing/deframing
     struct FrameContext {
-        comQueueIndex: FwIndexType  @< REQUIRED: Queue Index used by the ComQueue, other components shall not modify
-        apid: Apid            @< REQUIRED: 11 bits APID in CCSDS
+        comQueueIndex: FwIndexType  @< Queue Index used by the ComQueue, other components shall not modify
+        apid: Apid                  @< 11 bits APID in CCSDS
         transmissionType: TransmissionType @< REQUIRED: Type of transmission (command or telemetry). Default: telemetry
         messageId: U16              @< REQUIRED: CFS Message ID. Default: 0xFFFF (read runtime configuration)
-        sequenceCount: U16  @< REQUIRED to appease F Prime's build
-        vcId: U8           @< REQUIRED to appease F Prime's build
+        sequenceCount: U16          @< 14 bit Sequence count - sequence count is incremented per APID
+        vcId: U8                    @< 6 bit Virtual Channel ID - used for AOS, TC, and TM Protocols
+        pvn: Pvn                    @< Packet Version Number - used for AOS deframing to identify packet type
         sendNow: bool               @< Flag to AOS Framer that the Frame this packet goes into should be sent ASAP
+
     } default {
-        vcId = 1
         comQueueIndex = 0
         apid = Apid.FW_PACKET_UNKNOWN
+        sequenceCount = 0
+        vcId = 1
         transmissionType = TransmissionType.TELEMETRY
-        messageId = 0xFFFF # Invalid message ID, will force component to read from the runtime configuration
+        messageId = 0xFFFF
+        pvn = Pvn.INVALID_UNINITIALIZED
+        sendNow = false
     }
+
 }
