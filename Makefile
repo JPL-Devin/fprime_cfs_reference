@@ -60,7 +60,7 @@
 
 # Establish default values for critical variables.  Any of these may be overridden
 # on the command line or via the make environment configuration in an IDE
-O ?= build
+O ?= build-artifacts
 ARCH ?= native/default_cpu1
 BUILDTYPE ?= debug
 INSTALLPREFIX ?= /exe
