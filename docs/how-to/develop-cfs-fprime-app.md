@@ -1,6 +1,6 @@
 # Develop an F Prime Application for cFS
 
-This guide walks you through developing a new F Prime application that runs as a cFS (core Flight System) app. You will create a cFS application module, define an F Prime topology inside it, bridge F Prime's data flow to the cFS software bus, build the system, and connect the F Prime GDS for commanding and telemetry.
+This guide walks you through developing a new cFS application implemented using F Prime as the application architecture. You will create a cFS application module, define an F Prime topology inside it, bridge F Prime's data flow to the cFS software bus, build the system, and connect the F Prime GDS for commanding and telemetry.
 
 ---
 
@@ -729,11 +729,11 @@ Install the F Prime Python dependencies:
 pip install -r libs/fprime/requirements.txt
 ```
 
-### Build Errors: Missing 32-bit Libraries
+### Build Errors: Missing C++ Compiler
 
-Install multilib support:
+Install GCC with C++ support:
 ```bash
-sudo apt-get install gcc-multilib g++-multilib
+sudo apt-get install gcc g++
 ```
 
 ### Runtime: "No subscribers for MsgId"

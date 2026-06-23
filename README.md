@@ -1,18 +1,15 @@
 # F Prime cFS Reference
 
-A reference integration that runs [F Prime (F')](https://github.com/nasa/fprime) applications as [core Flight System (cFS)](https://github.com/nasa/cFE) apps. This project demonstrates how F Prime's component-based flight software architecture can operate inside the cFS runtime environment, leveraging cFS for process management and the software bus while using F Prime for application logic, commanding, telemetry, and the ground system.
+A reference project showing how [F Prime (F')](https://github.com/nasa/fprime) can be used as the implementation architecture for [core Flight System (cFS)](https://github.com/nasa/cFE) applications. Each cFS app in this project is implemented using F Prime's component-based architecture, with F Prime providing the topology wiring, autocoded commanding/telemetry, and ground data system (GDS) while cFS provides the runtime executive, process management, and software bus.
 
 > [!WARNING]
 > This code is experimental and is not fit for use in any project. Check back shortly!
 
 ## Architecture
 
-This project integrates two NASA flight software frameworks:
+This project demonstrates F Prime as the implementation architecture for cFS applications. Each cFS app is built using an F Prime topology — components, ports, and autocoded commanding/telemetry — while the cFS runtime (cFE) provides process management, the software bus (SB), and system services.
 
-- **cFS (core Flight System)**: Provides the runtime executive (cFE), operating system abstraction layer (OSAL), platform support package (PSP), and the software bus (SB) for inter-app messaging.
-- **F Prime (F')**: Provides the component architecture, topology wiring, autocoded commanding/telemetry, and the ground data system (GDS).
-
-The integration uses a **CfsBridge** component (`libs/fprime_cfs/`) that translates between the cFS software bus and F Prime's internal data flow. Two F Prime applications run as cFS apps:
+The **CfsBridge** component (`libs/fprime_cfs/`) translates between the cFS software bus and F Prime's internal data flow, allowing F Prime topologies to send and receive messages on the SB. Two F Prime–implemented cFS apps are included:
 
 ### System Diagram
 
@@ -61,7 +58,7 @@ The integration uses a **CfsBridge** component (`libs/fprime_cfs/`) that transla
 - An **FprimeRouter** for routing deframed commands to the command dispatcher
 - Rate groups driven by a **PollingTimer**
 
-**fprime_gds** is the ground data system bridge. It contains:
+**fprime_gds** is a cFS app for testing with the F Prime GDS. It bridges cFS SB messages to the F Prime GDS over TCP:
 
 - A **CfsBridge** that forwards F Prime telemetry/events from the cFS SB to the GDS
 - A **ComCcsdsNoRouter** subtopology for CCSDS framing/deframing
@@ -145,7 +142,7 @@ fprime_cfs_reference/
 ## Prerequisites
 
 - **Linux** (tested on Ubuntu 22.04)
-- **GCC** with 32-bit support (`gcc-multilib`, `g++-multilib`)
+- **GCC** (with `g++` for C++ support)
 - **CMake** >= 3.22
 - **Make**
 - **Python** >= 3.9
@@ -155,7 +152,7 @@ fprime_cfs_reference/
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y cmake make gcc g++ gcc-multilib g++-multilib
+sudo apt-get install -y cmake make gcc g++
 ```
 
 ## Building
@@ -258,21 +255,26 @@ Then open the GDS web interface at `http://localhost:5000` in your browser.
 | `-n` | No launch of a flight binary (cFS is already running) |
 | `--ip-client` | Connect as a TCP client to the GDS bridge server |
 
-## F Prime Developer Commands
+## Developer Commands
 
-When developing F Prime components within this project, the following `fprime-util` commands are available from within the F Prime app directories (e.g., `apps/fprime_app/FPrimeDeployment/`):
+The cFS build system uses the top-level `Makefile`. All build, install, and test operations go through `make`:
 
 | Command | Description |
 |---------|-------------|
-| `fprime-util generate` | Run CMake to generate the build system |
-| `fprime-util build` | Build the deployment |
+| `make SIMULATION=native prep` | Configure the CMake build for native Linux |
+| `make` | Build all apps and libraries |
+| `make install` | Install executables, `.so` files, tables, and startup scripts to `build-artifacts/exe/` |
+| `make distclean` | Remove all build artifacts for a clean rebuild |
+
+When developing F Prime components, `fprime-util` commands are available from within an F Prime app directory (e.g., `apps/fprime_app/FPrimeDeployment/`):
+
+| Command | Description |
+|---------|-------------|
 | `fprime-util impl` | Generate implementation template files (`.cpp`/`.hpp`) from FPP models |
 | `fprime-util impl --ut` | Generate unit test implementation templates |
-| `fprime-util generate --ut` | Generate the unit test build system |
-| `fprime-util check` | Build and run unit tests |
 
 > [!NOTE]
-> The `fprime-util` commands operate on F Prime components and deployments. For the full cFS + F Prime system build, use the top-level `make` commands described above.
+> Use the top-level `make` commands for building the full cFS + F Prime system. The `fprime-util` commands are useful for component development tasks like generating implementation stubs.
 
 ## Configuration
 
