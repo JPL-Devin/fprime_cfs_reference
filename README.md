@@ -1,6 +1,5 @@
-# F Prime CFS Reference Application
+# F Prime CFS Reference App
 
-This is a reference application for using the F Prime framework as a means to implement a CFS application.
+This is a reference cFS app constructed using the F Prime framework.
 
-> [!WARNING]
-> This code is experimental and is not fit for use in any project.  Check back shortly!
+See [fprime_cfs](https://github.com/fprime-community/fprime_cfs) for more information on how to build cFS applications using the F Prime framework.
