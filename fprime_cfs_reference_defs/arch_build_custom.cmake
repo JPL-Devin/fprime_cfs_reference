@@ -37,3 +37,6 @@ add_compile_options(
     -Wno-stringop-truncation    # Inhibit string operation truncation warnings
 )
 
+# Make fprime_cfs CMake modules (e.g. cfs_compat) available via include()
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../libs/fprime_cfs/cmake")
+
