@@ -25,6 +25,7 @@
 
 #include "cfe_core_api_base_msgids.h"
 #include "fprime_app_topicids.h"
+#include "fprime_cfs_compatibility.h"
 
 #define FPRIME_APP_CMD_PLATFORM_MIDVAL(x) CFE_PLATFORM_CMD_TOPICID_TO_MIDV(FPRIME_APP_MISSION_##x##_TOPICID)
 #define FPRIME_APP_TLM_PLATFORM_MIDVAL(x) CFE_PLATFORM_TLM_TOPICID_TO_MIDV(FPRIME_APP_MISSION_##x##_TOPICID)

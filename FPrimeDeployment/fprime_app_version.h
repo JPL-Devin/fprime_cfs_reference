@@ -69,4 +69,7 @@
  */
 #define FPRIME_APP_CFG_MAX_VERSION_STR_LEN 256
 
+/* Compatibility definitions for older cFE versions (e.g. draco) */
+#include "fprime_cfs_compatibility.h"
+
 #endif /* FPRIME_APP_VERSION_H */
