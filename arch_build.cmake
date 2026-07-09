@@ -17,5 +17,8 @@ set(FPRIME_APP_PLATFORM_CONFIG_FILE_LIST
   fprime_app_msgid_values.h
 )
 
+# Compatibility shims for older cFE versions
+include(cfs_compat)
+
 generate_configfile_set(${FPRIME_APP_PLATFORM_CONFIG_FILE_LIST})
 

@@ -23,5 +23,8 @@ set(FPRIME_APP_MISSION_CONFIG_FILE_LIST
   fprime_app_topicid_values.h
 )
 
+# Compatibility shims for older cFE versions
+include(cfs_compat)
+
 generate_configfile_set(${FPRIME_APP_MISSION_CONFIG_FILE_LIST})
 
