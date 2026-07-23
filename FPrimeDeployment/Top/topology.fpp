@@ -9,24 +9,14 @@ module FPrimeApp {
   }
 
 
-  # ComPacket Queue enum for queue types
-  enum Ports_ComPacketQueue : U8 {
-      EVENTS,
-      TELEMETRY 
-  }
-
-  # ComPacket Queue enum for queue types
-  enum Ports_ComBufferQueue : U8 {
-      FILE
-  }
-
   topology FPrimeDeployment {
 
   # ----------------------------------------------------------------------
   # Subtopology imports
   # ----------------------------------------------------------------------
     import CdhCore.Subtopology
-    
+    import ComCcsds.SpacePacketFraming
+
   # ----------------------------------------------------------------------
   # Instances used in the topology
   # ----------------------------------------------------------------------
@@ -35,8 +25,6 @@ module FPrimeApp {
     instance rateGroupDriver
     instance rateGroup1
     instance cfsBridge
-    instance fprimeRouter
-    instance comQueue
 
   # ----------------------------------------------------------------------
   # Pattern graph specifiers
@@ -69,23 +57,31 @@ module FPrimeApp {
       rateGroup1.RateGroupMemberOut[0] -> CdhCore.cmdDisp.run
       rateGroup1.RateGroupMemberOut[1] -> CdhCore.tlmSend.Run
       rateGroup1.RateGroupMemberOut[2] -> CdhCore.$health.Run
+      rateGroup1.RateGroupMemberOut[3] -> ComCcsds.comQueue.run
+      rateGroup1.RateGroupMemberOut[4] -> ComCcsds.aggregator.timeout
+      rateGroup1.RateGroupMemberOut[5] -> ComCcsds.commsBufferManager.schedIn
     }
 
     connections CfsBridge {
-      cfsBridge.dataOut -> fprimeRouter.dataIn
-      fprimeRouter.dataReturnOut -> cfsBridge.dataReturnIn
+      # Downlink: framing layer -> bridge -> cFS software bus
+      ComCcsds.SpacePacketFraming.dataOut -> cfsBridge.dataIn
+      cfsBridge.dataReturnOut             -> ComCcsds.SpacePacketFraming.dataReturnIn
+      cfsBridge.comStatusOut              -> ComCcsds.SpacePacketFraming.comStatusIn
+
+      # Uplink: cFS software bus -> bridge -> framing layer
+      cfsBridge.dataOut                         -> ComCcsds.SpacePacketFraming.dataIn
+      ComCcsds.SpacePacketFraming.dataReturnOut -> cfsBridge.dataReturnIn
     }
 
     connections Routing {
-      fprimeRouter.commandOut      -> CdhCore.cmdDisp.seqCmdBuff
-      CdhCore.cmdDisp.seqCmdStatus -> fprimeRouter.cmdResponseIn
+      # The router instance is FPrimeCfs.CfsRouter, selected via the ComCcsdsRouterConfig
+      # configuration override (fprime_config/config/ComCcsdsRouterConfig.fpp)
+      ComCcsds.fprimeRouter.commandOut[0] -> CdhCore.cmdDisp.seqCmdBuff
+      CdhCore.cmdDisp.seqCmdStatus   -> ComCcsds.fprimeRouter.cmdResponseIn
     }
     connections Queueing {
-      CdhCore.events.PktSend  -> comQueue.comPacketQueueIn[Ports_ComPacketQueue.EVENTS]
-      CdhCore.tlmSend.PktSend -> comQueue.comPacketQueueIn[Ports_ComPacketQueue.TELEMETRY]
-      comQueue.dataOut -> cfsBridge.dataIn
-      cfsBridge.dataReturnOut -> comQueue.dataReturnIn
-      cfsBridge.comStatusOut -> comQueue.comStatusIn
+      CdhCore.events.PktSend  -> ComCcsds.comQueue.comPacketQueueIn[ComCcsds.Ports_ComPacketQueue.EVENTS]
+      CdhCore.tlmSend.PktSend -> ComCcsds.comQueue.comPacketQueueIn[ComCcsds.Ports_ComPacketQueue.TELEMETRY]
     }
 
   }

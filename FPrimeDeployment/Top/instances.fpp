@@ -36,41 +36,6 @@ module FPrimeApp {
     queue size Default.QUEUE_SIZE
 
   # ----------------------------------------------------------------------
-  # Queued component instances
-  # ----------------------------------------------------------------------
-
-  instance comQueue: Svc.ComQueue base id 0x10003000 \
-      queue size ComCcsdsConfig.QueueSizes.comQueue \
-      stack size ComCcsdsConfig.StackSizes.comQueue \
-      priority ComCcsdsConfig.Priorities.comQueue \
-  {
-      phase Fpp.ToCpp.Phases.configObjects """
-      Fw::MallocAllocator mallocator;
-      """
-      phase Fpp.ToCpp.Phases.configComponents """
-      Svc::ComQueue::QueueConfigurationTable configurationTable;
-
-      // Events (highest-priority)
-      configurationTable.entries[Ports_ComPacketQueue::EVENTS].depth = 100;
-      configurationTable.entries[Ports_ComPacketQueue::EVENTS].priority = 0;
-
-      // Telemetry
-      configurationTable.entries[Ports_ComPacketQueue::TELEMETRY].depth = 100;
-      configurationTable.entries[Ports_ComPacketQueue::TELEMETRY].priority = 1;
-
-      // File Downlink Queue (buffer queue using NUM_CONSTANTS offset)
-      configurationTable.entries[Ports_ComPacketQueue::NUM_CONSTANTS + Ports_ComBufferQueue::FILE].depth = 100;
-      configurationTable.entries[Ports_ComPacketQueue::NUM_CONSTANTS + Ports_ComBufferQueue::FILE].priority = 2;
-
-      // Allocation identifier is 0 as the MallocAllocator discards it
-      comQueue.configure(configurationTable, 0, ConfigObjects::FPrimeApp_comQueue::mallocator);
-      """
-      phase Fpp.ToCpp.Phases.tearDownComponents """
-      comQueue.cleanup();
-      """
-  }
-
-  # ----------------------------------------------------------------------
   # Passive component instances
   # ----------------------------------------------------------------------
 
@@ -79,8 +44,6 @@ module FPrimeApp {
   instance rateGroupDriver: Svc.RateGroupDriver base id 0x10011000
 
   instance timer: Svc.PollingTimer base id 0x10012000
-
-  instance fprimeRouter: Svc.FprimeRouter base id 0x10013000
 
 
 }

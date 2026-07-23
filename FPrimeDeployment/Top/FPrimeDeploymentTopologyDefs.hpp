@@ -8,14 +8,14 @@
 
 // Subtopology PingEntries includes
 #include "Svc/Subtopologies/CdhCore/PingEntries.hpp"
+#include "Svc/Subtopologies/ComCcsds/PingEntries.hpp"
 
 // SubtopologyTopologyDefs includes
 #include "Svc/Subtopologies/CdhCore/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/ComCcsds/SubtopologyTopologyDefs.hpp"
 
 // Include autocoded FPP constants
 #include "FPrimeDeployment/Top/FppConstantsAc.hpp"
-#include "FPrimeDeployment/Top/Ports_ComPacketQueueEnumAc.hpp"
-#include "FPrimeDeployment/Top/Ports_ComBufferQueueEnumAc.hpp"
 #include "Fw/Types/MallocAllocator.hpp"
 
 /**
@@ -58,6 +58,7 @@ struct TopologyState {
     const char* hostname;   //!< Hostname for TCP communication
     U16 port;              //!< Port for TCP communication
     CdhCore::SubtopologyState cdhCore;           //!< Subtopology state for CdhCore
+    ComCcsds::SubtopologyState comCcsds;         //!< Subtopology state for ComCcsds
 };
 
 namespace PingEntries = ::PingEntries;
