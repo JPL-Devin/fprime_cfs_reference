@@ -27,9 +27,9 @@
 	url = https://github.com/nasa/fprime.git
 [submodule "fprime_app"]
 	path = apps/fprime_app
-	# Temporarily hosted on the reference fork (branch devin/fprime-app-sch-driver)
-	# until the SchAppDriver change is merged into fprime-community/fprime_app
-	url = https://github.com/JPL-Devin/fprime_cfs_reference.git
+	# Temporarily points at the PR fork (fprime-community/fprime_app#6);
+	# revert to fprime-community/fprime_app once merged
+	url = https://github.com/lestarch-autobot/fprime_app.git
 [submodule "fprime_gds"]
 	path = apps/fprime_gds
 	url = https://github.com/fprime-community/fprime_gds.git
