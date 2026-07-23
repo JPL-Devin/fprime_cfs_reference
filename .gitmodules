@@ -27,9 +27,7 @@
 	url = https://github.com/nasa/fprime.git
 [submodule "fprime_app"]
 	path = apps/fprime_app
-	# Temporarily points at the PR fork (fprime-community/fprime_app#6);
-	# revert to fprime-community/fprime_app once merged
-	url = https://github.com/lestarch-autobot/fprime_app.git
+	url = https://github.com/fprime-community/fprime_app.git
 [submodule "fprime_gds"]
 	path = apps/fprime_gds
 	url = https://github.com/fprime-community/fprime_gds.git
