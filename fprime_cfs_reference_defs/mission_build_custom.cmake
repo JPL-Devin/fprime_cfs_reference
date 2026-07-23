@@ -26,3 +26,6 @@ add_compile_options(
 add_definitions(
     -D_XOPEN_SOURCE=600
 )
+
+# Make fprime_cfs CMake modules (e.g. cfs_compat) available via include()
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../libs/fprime_cfs/cmake")

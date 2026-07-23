@@ -1,0 +1,11 @@
+#!/bin/bash
+commit="${1:-draco-rc5}"
+for dir in cfe psp osal tools/elf2cfetbl tools/tblCRCTool
+do
+    (
+        cd ${dir}
+        git checkout "${commit}"
+    ) || ( echo "[ERROR] Failed to checkout" && exit 4 )
+done
+
+
