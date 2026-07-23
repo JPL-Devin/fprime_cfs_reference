@@ -23,9 +23,9 @@ const Svc::RateGroupDriver::DividerSet rateGroupDivisorsSet{{{1, 0}, {2, 0}, {4,
 
 // Rate groups may supply a context token to each of the attached children whose purpose is set by the project. The
 // reference topology sets each token to zero as these contexts are unused in this project.
-U32 rateGroup1Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
-U32 rateGroup2Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
-U32 rateGroup3Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+Svc::ActiveRateGroup::ContextArray rateGroup1Context(0);
+Svc::ActiveRateGroup::ContextArray rateGroup2Context(0);
+Svc::ActiveRateGroup::ContextArray rateGroup3Context(0);
 
 enum TopologyConstants {
     COMM_PRIORITY = 34,
@@ -43,7 +43,7 @@ void configureTopology() {
     rateGroupDriver.configure(rateGroupDivisorsSet);
 
     // Rate groups require context arrays.
-    rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
+    rateGroup1.configure(rateGroup1Context);
 }
 
 void setupTopology(const TopologyState& state) {
