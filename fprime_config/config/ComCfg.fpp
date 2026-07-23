@@ -45,6 +45,7 @@ module ComCfg {
         FW_PACKET_IDLE           = 0x0006  @< F Prime idle
         FW_PACKET_HAND           = 0x00FE  @< F Prime handshake
         FW_PACKET_UNKNOWN        = 0x00FF  @< F Prime unknown packet
+        CFS_SCH_TICK             = 0x0090  @< cFS scheduler (SCH) tick message driving the rate groups
         SPP_IDLE_PACKET          = 0x07FF  @< Per Space Packet Standard, all 1s (11bits) is reserved for Idle Packets
         INVALID_UNINITIALIZED    = 0x0800  @< Anything equal or higher value is invalid and should not be used
     } default INVALID_UNINITIALIZED

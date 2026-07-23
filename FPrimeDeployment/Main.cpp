@@ -30,7 +30,6 @@ static FPrimeApp::TopologyState g_topologyState;
 
 static void FPRIME_APP_StopAndTeardown(FPrimeApp::TopologyState& inputs)
 {
-    FPrimeApp::timer.stop();
     FPrimeApp::teardownTopology(inputs);
 }
 
@@ -43,7 +42,7 @@ static void FPRIME_APP_Shutdown(FPrimeApp::TopologyState& inputs, uint32 status)
 
 void FPRIME_APP_delete_callback(void)
 {
-    printf("F Prime App: delete callback -- stopping timer and tearing down topology\n");
+    printf("F Prime App: delete callback -- tearing down topology\n");
     FPRIME_APP_StopAndTeardown(g_topologyState);
     printf("F Prime App: delete callback -- exiting application\n");
 }
@@ -63,10 +62,10 @@ void FPRIME_APP_Main(void) {
         FPRIME_APP_Shutdown(inputs, status);
     }
   
-    FPrimeApp::timer.startTimer(Fw::TimeInterval(1, 0));
+    // The rate groups are driven by cFS scheduler (SCH) tick messages received
+    // through the bridge and routed to the SchAppDriver; no polling timer is needed
     while (CFE_ES_RunLoop(&run_status) == true)
     {
-        FPrimeApp::timer.cycle();
         FPrimeApp::cfsBridge.process();
     }
     FPRIME_APP_Shutdown(inputs, run_status);
@@ -101,6 +100,7 @@ CFE_Status_t FPRIME_APP_Init(FPrimeApp::TopologyState& inputs)
     {
         printf("Subscribing to cFS messages...\n");
         FPrimeApp::cfsBridge.subscribe(ComCfg::Apid::FW_PACKET_COMMAND);
+        FPrimeApp::cfsBridge.subscribeCfsCommand(ComCfg::Apid::CFS_SCH_TICK);
     }
     printf("Setting up the topology, yo!\n");
     OS_TaskInstallDeleteHandler(&FPRIME_APP_delete_callback);

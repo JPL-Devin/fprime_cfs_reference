@@ -65,16 +65,6 @@ void setupTopology(const TopologyState& state) {
     startTasks(state);
 }
 
-void startRateGroups(const Fw::TimeInterval& interval) {
-    // The timer component drives the fundamental tick rate of the system.
-    // Svc::RateGroupDriver will divide this down to the slower rate groups.
-    timer.startTimer(interval);
-}
-
-void stopRateGroups() {
-    timer.stop();
-}
-
 void teardownTopology(const TopologyState& state) {
     // Autocoded (active component) task clean-up. Functions provided by topology autocoder.
     stopTasks(state);

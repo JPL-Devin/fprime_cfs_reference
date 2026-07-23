@@ -43,7 +43,8 @@ module FPrimeApp {
 
   instance rateGroupDriver: Svc.RateGroupDriver base id 0x10011000
 
-  instance timer: Svc.PollingTimer base id 0x10012000
+  @ Rate group driver ticked by cFS scheduler (SCH) messages
+  instance schAppDriver: FPrimeCfs.SchAppDriver base id 0x10012000
 
 
 }

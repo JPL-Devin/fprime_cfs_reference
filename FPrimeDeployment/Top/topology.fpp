@@ -21,7 +21,7 @@ module FPrimeApp {
   # Instances used in the topology
   # ----------------------------------------------------------------------
     instance chronoTime
-    instance timer
+    instance schAppDriver
     instance rateGroupDriver
     instance rateGroup1
     instance cfsBridge
@@ -49,8 +49,10 @@ module FPrimeApp {
 
 
     connections RateGroups {
-      # timer to drive rate group
-      timer.CycleOut -> rateGroupDriver.CycleIn
+      # cFS scheduler (SCH) tick messages, routed to the SchAppDriver, drive the rate group
+      ComCcsds.fprimeRouter.cfsCommandOut[0] -> schAppDriver.cfsCommandIn
+      schAppDriver.bufferReturnOut           -> ComCcsds.fprimeRouter.bufferReturnIn
+      schAppDriver.CycleOut                  -> rateGroupDriver.CycleIn
 
       # Rate group 1
       rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1.CycleIn
