@@ -34,3 +34,6 @@
 [submodule "libs/fprime_cfs"]
 	path = libs/fprime_cfs
 	url = https://github.com/fprime-community/fprime_cfs.git
+[submodule "apps/sch_lab"]
+	path = apps/sch_lab
+	url = https://github.com/nasa/sch_lab.git

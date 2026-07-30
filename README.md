@@ -5,11 +5,15 @@ This repository contains a minimal cFS system that demonstrates the use of cFS a
 1. `fprime_app`: A simple demonstration app showing how to construct cFS applications using F Prime
 2. `fprime_gds`: An application that bridges the F Prime GDS to the cFS messaging bus
 
+The system also includes the standard cFS `sch_lab` scheduler app, which publishes the 1 Hz tick
+that drives the F Prime application's rate groups.
+
 
 ```mermaid
 flowchart LR
     fprime_app(("fprime_app")) --- Bus[cFS Messaging Bus]
     fprime_gds(("fprime_gds")) --- Bus
+    sch_lab(("sch_lab")) --- Bus
     gds["F Prime GDS"] --- fprime_gds
 ```
 
@@ -50,6 +54,11 @@ make install
 ```
 
 ## Running the Reference
+
+> [!NOTE]
+> The F Prime application's rate groups are driven by a 1 Hz tick message (command MID `0x1890`,
+> APID `0x090`) published by the `sch_lab` scheduler app included in this system. The schedule is
+> configured in `fprime_cfs_reference_defs/tables/cpu1_sch_lab_table.c`.
 
 The build is installed in `build-artifacts/exe/cpu1/`. You can run the reference system using the following command:
 
