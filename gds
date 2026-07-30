@@ -1,0 +1,12 @@
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+VENV_DIR="$SCRIPT_DIR/fprime-venv"
+
+if [[ -d "$VENV_DIR" && "${VIRTUAL_ENV:-}" != "$VENV_DIR" ]]; then
+	# shellcheck disable=SC1091
+	source "$VENV_DIR/bin/activate"
+fi
+
+fprime-gds --ip-port 15010 --dictionary ./build-artifacts/exe/Linux/fprime_app/dict/*Dictionary.json  -n --ip-client --zmq-transport ipc:///tmp/fprime-server-in-ms ipc:///tmp/fprime-server-out-ms
+
