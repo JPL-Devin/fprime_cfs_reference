@@ -51,6 +51,13 @@ make install
 
 ## Running the Reference
 
+> [!IMPORTANT]
+> The F Prime application's rate groups (command dispatch, telemetry send, health, com queue) are
+> driven by cFS scheduler (SCH) tick messages on APID `0x0090`. A SCH application publishing these
+> ticks at 1 Hz must be part of the cFS build; without it, no telemetry is downlinked and the
+> integration tests will fail. See [PR #9](https://github.com/fprime-community/fprime_cfs_reference/pull/9)
+> which adds this SCH app.
+
 The build is installed in `build-artifacts/exe/cpu1/`. You can run the reference system using the following command:
 
 ```bash
