@@ -27,11 +27,11 @@ Set up the python virtual environment and install the required dependencies:
 python3 -m venv fprime-venv
 source fprime-venv/bin/activate
 pip install -r requirements.txt
-````
+```
 
 You should be ready to prepare and build the reference system.
 
-> ![TIP]
+> [!TIP]
 > Always activate the virtual environment using `source fprime-venv/bin/activate` before running any of the following commands.
 
 ## Building the Reference
@@ -40,7 +40,7 @@ This reference is built using the standard cFS build system. The first step is t
 
 ```bash
 make SIMULATION=native prep
-````
+```
 
 Once this build is prepared, build and install the reference system:
 
