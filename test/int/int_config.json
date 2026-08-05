@@ -1,0 +1,7 @@
+{
+    "Svc.CommandDispatcher": "CfsCore.cmdDisp",
+    "Svc.EventManager": "CfsCore.events",
+    "Svc.Health": "CfsCore.health",
+    "Svc.TlmPacketizer": "CfsCore.tlmSend",
+    "Svc.Version": "CfsCore.version"
+}
