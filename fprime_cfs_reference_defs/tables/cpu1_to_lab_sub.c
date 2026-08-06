@@ -6,6 +6,12 @@
 ** framing produces space packets with the secondary header flag set, so the
 ** message ID is the secondary header flag (0x0800) plus the packetized
 ** telemetry APID (ComCfg.Apid.FW_PACKET_PACKETIZED_TLM = 0x004).
+**
+** Caution: 0x0804 coincides with the default cFE TBL housekeeping telemetry
+** message ID (topic 4). This system never requests TBL housekeeping (the
+** sch_lab schedule sends only the F Prime tick), so the overlap is inert
+** here; deployments that request core-app housekeeping must move one of the
+** two identifiers.
 */
 
 #include "cfe_tbl_filedef.h" /* Required to obtain the CFE_TBL_FILEDEF macro definition */

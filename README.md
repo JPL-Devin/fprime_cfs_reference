@@ -5,16 +5,26 @@ This repository contains a minimal cFS system that demonstrates the use of cFS a
 1. `fprime_app`: A simple demonstration app showing how to construct cFS applications using F Prime
 2. `fprime_gds`: An application that bridges the F Prime GDS to the cFS messaging bus
 
-The system also includes the standard cFS `sch_lab` scheduler app, which publishes the 1 Hz tick
-that drives the F Prime application's rate groups.
+The system also includes the standard cFS lab apps:
 
+- `sch_lab`: publishes the 1 Hz tick that drives the F Prime application's rate groups
+- `ci_lab`: command ingest, receiving cFS command packets over UDP (port `1234`)
+- `to_lab`: telemetry output, forwarding subscribed software bus telemetry over UDP (port `2234`)
+
+`ci_lab` and `to_lab` give the [cFS GroundSystem](https://github.com/nasa/cFS-GroundSystem)
+a direct path to the software bus; `to_lab` is subscribed to the F Prime packetized
+telemetry message (`0x0804`) in `fprime_cfs_reference_defs/tables/cpu1_to_lab_sub.c`.
 
 ```mermaid
 flowchart LR
     fprime_app(("fprime_app")) --- Bus[cFS Messaging Bus]
     fprime_gds(("fprime_gds")) --- Bus
     sch_lab(("sch_lab")) --- Bus
+    ci_lab(("ci_lab")) --- Bus
+    to_lab(("to_lab")) --- Bus
     gds["F Prime GDS"] --- fprime_gds
+    cfsgds["cFS GroundSystem"] -- "UDP :1234" --> ci_lab
+    to_lab -- "UDP :2234" --> cfsgds
 ```
 
 ## Setup
@@ -73,6 +83,18 @@ The reference hosts a TCP server for the GDS to connect on port `15010`. The GDS
 
 ```bash
 fprime-gds --ip-port 15010 --dictionary ./build-artifacts/exe/Linux/fprime_app/dict/*Dictionary.json  -n --ip-client
+```
+
+## Running the cFS GroundSystem
+
+The cFS GroundSystem can command and monitor the system directly through `ci_lab` and
+`to_lab` using the `fprime-cfs` tooling from the
+[fprime_cfs](https://github.com/fprime-community/fprime_cfs) library:
+
+```bash
+fprime-cfs --dictionary ./build-artifacts/exe/Linux/fprime_app/dict/*Dictionary.json \
+    --ground-system-dir tools/cFS-GroundSystem \
+    --deployment build-artifacts/exe/cpu1 --app build-artifacts/exe/cpu1/core-cpu1
 ```
 
 Enjoy!
