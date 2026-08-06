@@ -13,7 +13,7 @@ The system also includes the standard cFS lab apps:
 
 `ci_lab` and `to_lab` give the [cFS GroundSystem](https://github.com/nasa/cFS-GroundSystem)
 a direct path to the software bus; `to_lab` is subscribed to the F Prime packetized
-telemetry message (`0x0804`) in `fprime_cfs_reference_defs/tables/cpu1_to_lab_sub.c`.
+telemetry message (`0x0820`) in `fprime_cfs_reference_defs/tables/cpu1_to_lab_sub.c`.
 
 ```mermaid
 flowchart LR

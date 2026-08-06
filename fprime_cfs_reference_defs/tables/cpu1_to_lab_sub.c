@@ -5,13 +5,8 @@
 ** cFS GroundSystem receives it directly over UDP. The fprime_app telemetry
 ** framing produces space packets with the secondary header flag set, so the
 ** message ID is the secondary header flag (0x0800) plus the packetized
-** telemetry APID (ComCfg.Apid.FW_PACKET_PACKETIZED_TLM = 0x004).
-**
-** Caution: 0x0804 coincides with the default cFE TBL housekeeping telemetry
-** message ID (topic 4). This system never requests TBL housekeeping (the
-** sch_lab schedule sends only the F Prime tick), so the overlap is inert
-** here; deployments that request core-app housekeeping must move one of the
-** two identifiers.
+** telemetry APID (ComCfg.Apid.FW_PACKET_PACKETIZED_TLM = 0x020, chosen to
+** stay clear of the default cFE core housekeeping telemetry topics).
 */
 
 #include "cfe_tbl_filedef.h" /* Required to obtain the CFE_TBL_FILEDEF macro definition */
@@ -21,8 +16,8 @@
 
 #include "to_lab_msgids.h"
 
-/* F Prime packetized telemetry: secondary header flag + APID 0x004 (see fprime_app) */
-#define FPRIME_PACKETIZED_TLM_MID 0x0804
+/* F Prime packetized telemetry: secondary header flag + APID 0x020 (see fprime_app) */
+#define FPRIME_PACKETIZED_TLM_MID 0x0820
 
 TO_LAB_Subs_t Subscriptions = { .Subs = {
                                     { CFE_SB_MSGID_WRAP_VALUE(FPRIME_PACKETIZED_TLM_MID), { 0, 0 }, 4 },
