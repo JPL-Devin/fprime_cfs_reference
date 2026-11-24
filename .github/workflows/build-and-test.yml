@@ -1,15 +1,34 @@
 # Builds the F Prime CFS reference (native simulation) and runs the GDS integration tests
 
 name: "Build and Test"
+run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dispatch_id != '' && format('ext-ci {0} ({1}@{2})', inputs.dispatch_id, inputs.fprime_repository, inputs.fprime_ref) || '' }}
 
 on:
   push:
     branches: [ devel, main ]
   pull_request:
     branches: [ devel, main ]
+  workflow_dispatch:
+    inputs:
+      fprime_repository:
+        description: "F´ repository to overlay under ./libs/fprime (<owner>/<repo>); a fork for fork PRs"
+        type: string
+        default: nasa/fprime
+      fprime_ref:
+        description: "F´ ref to overlay; the orchestrator passes an exact commit SHA"
+        type: string
+        default: devel
+      fprime_pr_number:
+        description: "nasa/fprime PR number being tested (empty for branch runs); used to pick nasa/fprime-gds@pr-<N>"
+        type: string
+        default: ""
+      dispatch_id:
+        description: "Correlation id set by the orchestrator (informational)"
+        type: string
+        default: ""
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  group: ${{ github.workflow }}-${{ inputs.dispatch_id || github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 permissions:
@@ -26,10 +45,37 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+      - name: "Overlay requested F´ revision"
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.fprime_repository }}
+          ref: ${{ inputs.fprime_ref }}
+          path: ./libs/fprime
+          submodules: true
+          fetch-depth: 0
+          filter: blob:none
       - name: "Setup F´ environment"
         uses: nasa/fprime-actions/setup@devel
         with:
           location: ./libs/fprime
+          # No cache writes when building untrusted F´ PR code
+          ccache: ${{ github.event_name != 'workflow_dispatch' }}
+      - name: "Upgrade fprime-gds to pr-<N> (if the F´ PR has a matching GDS branch)"
+        if: github.event_name == 'workflow_dispatch' && inputs.fprime_pr_number != ''
+        shell: bash
+        env:
+          PR_NUMBER: ${{ inputs.fprime_pr_number }}
+        run: |
+          set -euo pipefail
+          [[ "${PR_NUMBER}" =~ ^[0-9]+$ ]] || { echo "::error::fprime_pr_number must be numeric"; exit 1; }
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://api.github.com/repos/nasa/fprime-gds/branches/pr-${PR_NUMBER}")
+          if [ "${code}" = "200" ]; then
+            echo "Installing nasa/fprime-gds@pr-${PR_NUMBER}"
+            pip install --upgrade "git+https://github.com/nasa/fprime-gds.git@pr-${PR_NUMBER}"
+          else
+            echo "No nasa/fprime-gds pr-${PR_NUMBER} branch (HTTP ${code}); keeping the pinned version"
+          fi
       - name: "Install fprime_cfs GDS plugins"
         run: pip3 install -r requirements.txt
       - name: "Build"
